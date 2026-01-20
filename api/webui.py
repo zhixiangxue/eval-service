@@ -375,7 +375,7 @@ def list_recent_tasks():
 # ============================================================
 
 app = gr.Blocks(
-    title="RAG评估系统",
+    title="RAG Evaluation",
     theme=gr.themes.Soft(),
     css=".gradio-container {max-width: 1200px !important}"
 )
