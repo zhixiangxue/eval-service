@@ -41,16 +41,20 @@ if (-not (Test-Path $pythonExe)) {
 
 # Check if dependencies are installed
 Write-Host "Checking dependencies..." -ForegroundColor Cyan
-$depsCheck = & $pythonExe -c "import fastapi, schedule" 2>&1
+$depsCheck = & $pythonExe -c "import fastapi, schedule, rich, dotenv, asyncio" 2>&1
 if ($LASTEXITCODE -ne 0) {
-    Write-Host "Error: Dependencies not installed" -ForegroundColor Red
-    Write-Host "Please install dependencies first:" -ForegroundColor Yellow
-    Write-Host "  cd zeval-service" -ForegroundColor Yellow
-    Write-Host "  $VenvPath\Scripts\activate" -ForegroundColor Yellow
+    Write-Host "Warning: Some dependencies may not be installed" -ForegroundColor Yellow
+    Write-Host "Error details:" -ForegroundColor Yellow
+    Write-Host $depsCheck -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "Continuing anyway... If worker fails, install dependencies:" -ForegroundColor Yellow
+    Write-Host "  cd eval-service" -ForegroundColor Yellow
+    Write-Host "  ..\.venv\Scripts\activate" -ForegroundColor Yellow
     Write-Host "  pip install -r requirements.txt" -ForegroundColor Yellow
-    exit 1
+    Write-Host ""
+} else {
+    Write-Host "Dependencies OK" -ForegroundColor Green
 }
-Write-Host "Dependencies OK" -ForegroundColor Green
 
 # Change to zeval-service directory
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path

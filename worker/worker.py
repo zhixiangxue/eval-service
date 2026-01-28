@@ -99,9 +99,33 @@ class EvaluationWorker:
     
     def start(self):
         """启动 Worker"""
+        from rich.panel import Panel
+        
+        console.print("\n" + "="*80)
         console.print("[bold green]🚀 Evaluation Worker 启动[/bold green]")
-        console.print(f"检查间隔: {self.check_interval} 秒")
-        console.print(f"LLM URI: {self.config.llm_uri}\n")
+        console.print("="*80 + "\n")
+        
+        # 显示配置信息
+        console.print(Panel.fit(
+            f"[bold cyan]Worker 配置[/bold cyan]\n\n"
+            f"[bold yellow]LLM 配置[/bold yellow]\n"
+            f"  模型: {self.config.llm_uri}\n"
+            f"  并发数: {self.config.max_concurrency}\n\n"
+            f"[bold yellow]生成配置[/bold yellow]\n"
+            f"  测试用例数: {self.config.num_test_cases}\n"
+            f"  最大单元数: {self.config.max_units}\n"
+            f"  Personas数: {self.config.num_personas}\n\n"
+            f"[bold yellow]RAG 配置[/bold yellow]\n"
+            f"  RAG地址: {self.config.rag_base_url}\n"
+            f"  数据集ID: {self.config.rag_dataset_id}\n"
+            f"  Top-K: {self.config.rag_top_k}\n\n"
+            f"[bold yellow]Worker 配置[/bold yellow]\n"
+            f"  检查间隔: {self.check_interval} 秒\n"
+            f"  领域: {self.config.domain}",
+            title="⚙️ 配置信息",
+            border_style="cyan"
+        ))
+        console.print()
         
         # 定时任务：每 check_interval 秒检查一次
         schedule.every(self.check_interval).seconds.do(self._process_next_task)
